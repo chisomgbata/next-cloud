@@ -11,10 +11,10 @@ services:
     container_name: lychee_db
     image: mariadb:10
     environment:
-      - MYSQL_ROOT_PASSWORD=<ROOT_PASSWORD>
+      - MYSQL_ROOT_PASSWORD=ROOT_PASSWORD
       - MYSQL_DATABASE=lychee
       - MYSQL_USER=lychee
-      - MYSQL_PASSWORD=<LYCHEE_PASSWORD>
+      - MYSQL_PASSWORD=LYCHEE_PASSWORD
     expose: 
       - 3306
     volumes:
@@ -40,7 +40,7 @@ services:
       - DB_PORT=3306
       - DB_DATABASE=lychee
       - DB_USERNAME=lychee
-      - DB_PASSWORD=<LYCHEE_PASSWORD>
+      - DB_PASSWORD=LYCHEE_PASSWORD
       - STARTUP_DELAY=30
     restart: unless-stopped
     depends_on:
