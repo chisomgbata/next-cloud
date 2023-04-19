@@ -1,34 +1,30 @@
-version: "3"
+version: "2"
 services:
-  mariadb:
-    image: lscr.io/linuxserver/mariadb:latest
-    container_name: lychee_mariadb
-    restart: always
-    volumes:
-      - /path/to/mariadb/data:/config
+  chevereto:
+    image: lscr.io/linuxserver/chevereto
+    container_name: chevereto
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
-      - MYSQL_DATABASE=lychee
-      - MYSQL_USER=lychee
-      - MYSQL_PASSWORD=dbpassword
-      - PGID=1000
       - PUID=1000
+      - PGID=1000
       - TZ=Europe/London
-  lychee:
-    image: lscr.io/linuxserver/lychee:latest
-    container_name: lychee
-    restart: always
-    depends_on:
-      - mariadb
     volumes:
       - /path/to/config:/config
-      - /path/to/pictures:/pictures
+      - /path/to/data:/data
+    restart: unless-stopped
+    depends_on:
+      - chevereto-db
+
+  chevereto-db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: chevereto-db
     environment:
-      - DB_HOST=mariadb
-      - DB_USERNAME=lychee
-      - DB_PASSWORD=dbpassword
-      - DB_DATABASE=lychee
-      - DB_PORT=3306
-      - PGID=1000
       - PUID=1000
+      - PGID=1000
       - TZ=Europe/London
+      - MYSQL_ROOT_PASSWORD=<yourrootpass>
+      - MYSQL_DATABASE=chevereto
+      - MYSQL_USER=chevereto
+      - MYSQL_PASSWORD=<yourdbpass>
+    volumes:
+      - /path/to/config:/config
+    restart: unless-stopped
