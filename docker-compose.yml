@@ -15,7 +15,7 @@ services:
       MYSQL_PASSWORD: user_database_password
 
   php:
-    image: chevereto:latest #tweak with target image to run
+    image:   ghcr.io/chevereto/chevereto:latest #tweak with target image to run
     networks:
       - chevereto
     volumes:
