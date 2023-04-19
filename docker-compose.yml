@@ -5,7 +5,7 @@ volumes:
     name: nextcloud_aio_mastercontainer # This line is not allowed to be changed
 
 services:
-  nextcloud:
+  nextcloud-aio-mastercontainer:
     image: nextcloud/all-in-one:latest
     restart: always
     container_name: nextcloud-aio-mastercontainer # This line is not allowed to be changed
