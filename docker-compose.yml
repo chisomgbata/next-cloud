@@ -1,30 +1,42 @@
-version: "2"
-services:
-  chevereto:
-    image: lscr.io/linuxserver/chevereto
-    container_name: chevereto
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-    volumes:
-      - /path/to/config:/config
-      - /path/to/data:/data
-    restart: unless-stopped
-    depends_on:
-      - chevereto-db
+version: "3.8"
 
-  chevereto-db:
-    image: lscr.io/linuxserver/mariadb
-    container_name: chevereto-db
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/London
-      - MYSQL_ROOT_PASSWORD=<yourrootpass>
-      - MYSQL_DATABASE=chevereto
-      - MYSQL_USER=chevereto
-      - MYSQL_PASSWORD=<yourdbpass>
+services:
+  database:
+    image: mariadb:jammy
+    networks:
+      - chevereto
     volumes:
-      - /path/to/config:/config
-    restart: unless-stopped
+      - database:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: chevereto
+      MYSQL_USER: chevereto
+      MYSQL_PASSWORD: user_database_password
+
+  php:
+    image: chevereto:latest #tweak with target image to run
+    networks:
+      - chevereto
+    volumes:
+      - storage:/var/www/html/images/
+    restart: always
+    environment:
+      CHEVERETO_DB_HOST: database
+      CHEVERETO_DB_USER: chevereto
+      CHEVERETO_DB_PASS: user_database_password
+      CHEVERETO_DB_PORT: 3306
+      CHEVERETO_DB_NAME: chevereto
+      CHEVERETO_HOSTNAME: chev.sukkart.com #set your hostname
+      CHEVERETO_HOSTNAME_PATH: /
+      CHEVERETO_HTTPS: 0
+      CHEVERETO_ASSET_STORAGE_TYPE: local
+      CHEVERETO_ASSET_STORAGE_URL: http://chev.sukkart.com/images/_assets/ #hostname-aware URL
+      CHEVERETO_ASSET_STORAGE_BUCKET: /var/www/html/images/_assets/
+
+volumes:
+  database:
+  storage:
+
+networks:
+  chevereto:
